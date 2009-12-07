@@ -21,8 +21,16 @@ extern "C" {
 #define u8 unsigned char
 #endif
 
+#ifndef i32
+#define i32 int
+#endif
+
 #ifndef i64
 #define i64 long long int
+#endif
+
+#ifndef u32
+#define u32 unsigned i32
 #endif
 
 #ifndef u64
@@ -49,7 +57,7 @@ extern "C" {
 
 // Register function.
 void _sqal_register(HSQUIRRELVM v, char *name, SQFUNCTION func, char *check_typemask = ".", int check_nparams = 0);
-void _sqal_register_constant(HSQUIRRELVM v, char *name, float vv);
+void _sqal_register_constant(HSQUIRRELVM v, char *name, SQFloat vv);
 void _sqal_register_constant(HSQUIRRELVM v, char *name, int vv);
 //#define sqal_register(NAME, NPARAMS, TYPEMASK) _sqal_register(v, "__sqfunc" #NAME, __sqfunc_##NAME, (TYPEMASK), (NPARAMS))
 #define sqal_register_simple(NAME, TYPEMASK) _sqal_register(v, #NAME, __sqfunc_##NAME, (TYPEMASK), SQ_MATCHTYPEMASKSTRING)

@@ -8,7 +8,7 @@ void _sqal_register(HSQUIRRELVM v, char *name, SQFUNCTION func, char *check_type
 	sq_createslot(v, -3);
 }
 
-void _sqal_register_constant(HSQUIRRELVM v, char *name, float vv) {
+void _sqal_register_constant(HSQUIRRELVM v, char *name, SQFloat vv) {
 	sq_pushstring(v, name, -1);
 	sq_pushfloat(v, vv);
 	sq_createslot(v,-3);
