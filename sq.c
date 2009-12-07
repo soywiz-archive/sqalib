@@ -17,6 +17,9 @@
 #include <sqstdstring.h>
 #include <sqstdaux.h>
 
+// PATCH.
+#include <sqalib.h>
+
 #ifdef SQUNICODE
 #define scfprintf fwprintf
 #define scfopen	_wfopen
@@ -310,6 +313,9 @@ int main(int argc, char* argv[])
 	sqstd_register_systemlib(v);
 	sqstd_register_mathlib(v);
 	sqstd_register_stringlib(v);
+
+	// PATCH
+	sqal_math_register(v);
 
 	//aux library
 	//sets error handlers
