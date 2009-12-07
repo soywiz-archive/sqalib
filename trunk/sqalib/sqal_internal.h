@@ -45,10 +45,12 @@ extern "C" {
 #define DSQA_FUNC(NAME) static SQInteger SQA_FUNC(NAME)(HSQUIRRELVM v)
 #define DSQA_METHOD(CLASS, NAME) static SQInteger SQA_METHOD(CLASS, NAME)(HSQUIRRELVM v)
 
-// Register function.
+}
 
+// Register function.
 void _sqal_register(HSQUIRRELVM v, char *name, SQFUNCTION func, char *check_typemask = ".", int check_nparams = 0);
+void _sqal_register_constant(HSQUIRRELVM v, char *name, float vv);
+void _sqal_register_constant(HSQUIRRELVM v, char *name, int vv);
 //#define sqal_register(NAME, NPARAMS, TYPEMASK) _sqal_register(v, "__sqfunc" #NAME, __sqfunc_##NAME, (TYPEMASK), (NPARAMS))
 #define sqal_register_simple(NAME, TYPEMASK) _sqal_register(v, #NAME, __sqfunc_##NAME, (TYPEMASK), SQ_MATCHTYPEMASKSTRING)
-
-}
+#define sqal_register_constant(NAME, VALUE) _sqal_register_constant(v, NAME, VALUE);
