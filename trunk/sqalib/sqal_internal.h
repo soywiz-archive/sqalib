@@ -4,6 +4,19 @@
 #include <memory.h>
 #include <assert.h>
 
+#include <sqpcheader.h>
+#include <sqvm.h>
+#include <sqstring.h>
+#include <sqtable.h>
+#include <sqarray.h>
+#include <sqfuncproto.h>
+#include <sqclosure.h>
+#include <sqclass.h>
+
+#include <squirrel.h>
+
+extern "C" {
+
 #ifndef u8
 #define u8 unsigned char
 #endif
@@ -23,3 +36,19 @@
 	#define unittest(ss) void __unittest_##ss()
 	#define unit_assert(v)
 #endif
+
+// Functions.
+
+#define SQA_FUNC(NAME) __sqfunc_##NAME
+#define SQA_METHOD(CLASS, NAME) CLASS##__sqmethod_##NAME
+
+#define DSQA_FUNC(NAME) static SQInteger SQA_FUNC(NAME)(HSQUIRRELVM v)
+#define DSQA_METHOD(CLASS, NAME) static SQInteger SQA_METHOD(CLASS, NAME)(HSQUIRRELVM v)
+
+// Register function.
+
+void _sqal_register(HSQUIRRELVM v, char *name, SQFUNCTION func, char *check_typemask = ".", int check_nparams = 0);
+//#define sqal_register(NAME, NPARAMS, TYPEMASK) _sqal_register(v, "__sqfunc" #NAME, __sqfunc_##NAME, (TYPEMASK), (NPARAMS))
+#define sqal_register_simple(NAME, TYPEMASK) _sqal_register(v, #NAME, __sqfunc_##NAME, (TYPEMASK), SQ_MATCHTYPEMASKSTRING)
+
+}

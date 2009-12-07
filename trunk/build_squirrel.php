@@ -47,10 +47,12 @@ Builder::build(array(
 		'sq.c',
 		'squirrel/squirrel.lib',
 		'sqstdlib/sqstdlib.lib',
+		'sqalib/sqalib.lib',
 	),
 	'include' => array(
 		'squirrel',
 		'sqstdlib',
+		'sqalib',
 	),
 	'opts' => '/MD /GF /Ox',
 ));
