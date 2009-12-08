@@ -1,7 +1,7 @@
 #include "sqal_internal.h"
 
 class Stream { public:
-	enum Anchor {
+	enum Origin {
 		Set = SEEK_SET,
 		Cur = SEEK_CUR,
 		End = SEEK_END,
@@ -25,8 +25,8 @@ class Stream { public:
 		return _write(inputBuffer, length);
 	}
 	
-	i64 seek(i64 setPosition, Anchor anchor = Set) {
-		return _seek(setPosition, anchor);
+	i64 seek(i64 setPosition, Origin origin = Set) {
+		return _seek(setPosition, origin);
 	}
 
 	i64 tell() { return seek(0, Stream::Cur); }
@@ -41,12 +41,15 @@ class Stream { public:
 		seek(cursor);
 		return _size;
 	}
+	
+	void flush() { _flush(); }
 
 protected:
 	virtual int _read(u8 *outputBuffer, int outputLength) = NULL;
 	virtual int _write(u8 *inputBuffer, int inputLength) = NULL;
-	virtual i64 _seek(i64 setPosition, Anchor anchor) = NULL;
+	virtual i64 _seek(i64 setPosition, Origin origin) = NULL;
 	virtual void _truncate(i64 setPosition) { }
+	virtual void _flush() { }
 };
 
 class FileStream : public Stream { public:
@@ -55,6 +58,10 @@ class FileStream : public Stream { public:
 	FileStream(char *name, char *mode) {
 		file = fopen(name, mode);
 		assert(file != NULL);
+	}
+	
+	~FileStream() {
+		fclose(file);
 	}
 
 	virtual int _read(u8 *outputBuffer, int outputLength) {
@@ -65,13 +72,17 @@ class FileStream : public Stream { public:
 		return fwrite(inputBuffer, 1, inputLength, file);
 	}
 	
-	virtual i64 _seek(i64 setPosition, Anchor anchor) {
-		fseek(file, setPosition, anchor);
+	virtual i64 _seek(i64 setPosition, Origin origin) {
+		fseek(file, setPosition, origin);
 		return ftell(file);
 	}
 
 	virtual void _truncate(i64 setPosition) {
 		//ftruncate(file, setPosition);
+	}
+
+	virtual void _flush() {
+		fflush(file);
 	}
 };
 
@@ -145,8 +156,8 @@ class MemoryStream : public Stream { public:
 		return inputLength;
 	}
 	
-	virtual i64 _seek(i64 setPosition, Anchor anchor) {
-		switch (anchor) {
+	virtual i64 _seek(i64 setPosition, Origin origin) {
+		switch (origin) {
 			case Set: position = setPosition; break;
 			case Cur: position += setPosition; break;
 			case End: position = length + setPosition; break;
@@ -219,8 +230,8 @@ class SliceStream : public Stream { public:
 		return length;
 	}
 
-	virtual i64 _seek(i64 setPosition, Anchor anchor) {
-		switch (anchor) {
+	virtual i64 _seek(i64 setPosition, Origin origin) {
+		switch (origin) {
 			case Set: position = setPosition; break;
 			case Cur: position += setPosition; break;
 			case End: position = length + setPosition; break;
@@ -254,6 +265,18 @@ class Directory { public:
 	}
 	
 	bool exists(char *name) {
+		return false;
+	}
+	
+	Stream *open(char *name) {
+		return NULL;
+	}
+	
+	bool mkdir(char *name) {
+		return false;
+	}
+
+	bool rmdir(char *name) {
 		return false;
 	}
 	
