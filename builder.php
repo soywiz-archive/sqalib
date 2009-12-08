@@ -60,9 +60,11 @@ class Builder {
 					if (!self::compare_times($file_out, $file_deps)) {
 						echo "{$file} -> {$file_out}\n";
 						@unlink($file_out);
-						$cmd = "cl /nologo /c{$includes} {$file} /Fo" . escapeshellarg($file_out) . " {$info['opts']}";
+						$cmd = "cl /nologo /c{$includes} {$file} /Fo" . escapeshellarg($file_out) . " {$info['opts']} 2> error.txt";
 						//echo "{$cmd}\n";
 						passthru($cmd, $retval);
+						@readfile('error.txt');
+						unlink('error.txt');
 						self::update_times($file_out, $file_deps);
 						if (filesize($file_out) == 0) @unlink($file_out);
 					}
