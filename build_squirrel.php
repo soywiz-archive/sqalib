@@ -7,12 +7,12 @@ $common = '/MD /GF /Ox /EHsc';
 
 // Squirrel.
 Builder::build(array(
-	'out' => 'squirrel/squirrel.lib',
+	'out' => 'squirrel3/squirrel.lib',
 	'in'  => array(
-		'squirrel/*.cpp',
+		'squirrel3/*.cpp',
 	),
 	'include' => array(
-		'squirrel',
+		'squirrel3',
 	),
 	'opts' => "{$common}",
 ));
@@ -24,7 +24,7 @@ Builder::build(array(
 		'sqstdlib/*.cpp',
 	),
 	'include' => array(
-		'squirrel',
+		'squirrel3',
 		'sqstdlib',
 	),
 	'opts' => "{$common}",
@@ -37,7 +37,7 @@ Builder::build(array(
 		'sqalib/*.cpp',
 	),
 	'include' => array(
-		'squirrel',
+		'squirrel3',
 		'sqstdlib',
 		'sqalib',
 		'sqrat',
@@ -50,12 +50,12 @@ Builder::build(array(
 	'out' => 'sq.exe',
 	'in'  => array(
 		'sq.c',
-		'squirrel/squirrel.lib',
+		'squirrel3/squirrel.lib',
 		'sqstdlib/sqstdlib.lib',
 		'sqalib/sqalib.lib',
 	),
 	'include' => array(
-		'squirrel',
+		'squirrel3',
 		'sqstdlib',
 		'sqalib',
 		'sqrat',

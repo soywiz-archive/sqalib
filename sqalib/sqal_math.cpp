@@ -4,7 +4,6 @@
 
 extern "C" {
 
-
 //#define SQUSEDOUBLE
 
 #ifndef round
@@ -255,42 +254,33 @@ SQUIRREL_API void sqal_math_register(HSQUIRRELVM v) {
 		// Constants.
 		sqal_register_constant("PI", (SQFloat)3.14159265358979323846);
 
-		/*
-		script.CompileString(_SC(" \
-			mod <- ::import(\"scripts/samplemodule\", {}); \
-			\
-			gTest.EXPECT_FLOAT_EQ(3.1415, mod.PI); \
-			gTest.EXPECT_INT_EQ(10, mod.RectArea(2, 5)); \
-			gTest.EXPECT_FLOAT_EQ(12.566, mod.CircleArea(2)); \
-			"));
-		*/
-
-		static const SQChar *class_vec_src = _SC(" \
-		class vec { \n\
-			x = 0; y = 0; \n\
-			constructor(x, y = null) { \n\
-				if (y == null) { \n\
-					if (!(\"x\" in x)) throw(\"::vec invalid parameters\"); \n\
-					this.y = x.y; this.x = x.x; \n\
-				} else { \n\
-					this.x = x; this.y = y; \n\
+		//if (0)
+		{ // ::vec
+			static const SQChar *class_vec_src = _SC(" \
+				class vec { \n\
+					x = 0; y = 0; \n\
+					constructor(x, y = null) { \n\
+						if (y == null) { \n\
+							if (!(\"x\" in x)) throw(\"::vec invalid parameters\"); \n\
+							this.y = x.y; this.x = x.x; \n\
+						} else { \n\
+							this.x = x; this.y = y; \n\
+						} \n\
+					} \n\
+					function _cmp (that)  { return ((this.x == that.x) && (this.y == that.y)) ? 0 : 1; } \n\
+					function _add (that)  { return ::vec(this.x + that.x, this.y + that.y); } \n\
+					function _sub (that)  { return ::vec(this.x - that.x, this.y - that.y); } \n\
+					function _mul (v)     { return ::vec(this.x * v     , this.y * v     ); } \n\
+					function _div (v)     { return ::vec(this.x / v     , this.y / v     ); } \n\
+					function _unm ()      { return ::vec(-this.x, -this.y); } \n\
+					function len  ()      { return ::sqrt(this.x * this.x + this.y * this.y); } \n\
+					function floor()      { return ::vec(::floor(this.x), ::floor(this.y)); } \n\
+					function abs  ()      { return ::vec(::abs(this.x), ::abs(this.y)); } \n\
+					function normalize()  { local l = this.len(); return ::vec(this.x / l, this.y / l); } \n\
+					function _tostring()  { return ::format(\"vec(%d, %d)\", this.x, this.y) } \n\
+					function _cloned()    { } \n\
 				} \n\
-			} \n\
-			function _cmp(that)  { return ((this.x == that.x) && (this.y == that.y)) ? 0 : 1; } \n\
-			function _add(that)  { return ::vec(this.x + that.x, this.y + that.y); } \n\
-			function _sub(that)  { return ::vec(this.x - that.x, this.y - that.y); } \n\
-			function _mul(v   )  { return ::vec(this.x * v     , this.y * v     ); } \n\
-			function _div(v   )  { return ::vec(this.x / v     , this.y / v     ); } \n\
-			function _unm(    )  { return ::vec(-this.x, -this.y); } \n\
-			function len (    )  { return ::sqrt(this.x * this.x + this.y * this.y); } \n\
-			function floor(   )  { return ::vec(::floor(this.x), ::floor(this.y)); } \n\
-			function abs(     )  { return ::vec(::abs(this.x), ::abs(this.y)); } \n\
-			function _tostring() { return ::format(\"vec(%d, %d)\", this.x, this.y) } \n\
-			function normalize() { local l = this.len(); return ::vec(this.x / l, this.y / l); } \n\
-		} \n\
-		");
-		
-		{
+			");
 			SQInteger oldtop = sq_gettop(v);
 			if (SQ_SUCCEEDED(sq_compilebuffer(v, class_vec_src, strlen(class_vec_src), _SC("math vec"), SQTrue))) {
 				sq_pushroottable(v);
@@ -298,38 +288,10 @@ SQUIRREL_API void sqal_math_register(HSQUIRRELVM v) {
 			}
 			sq_settop(v, oldtop);
 		}
-
-
-		/*
-		// Binding.
-		using namespace Sqrat;
-		DefaultVM::Set(v);
-
-		// Functions.
-		RootTable()
-			// Rounding.
-			.Func<SQFloat (*)(SQFloat)>("floor", &floor)
-			.Func<SQFloat (*)(SQFloat)>("ceil",  &ceil)
-			.Func<SQFloat (*)(SQFloat)>("round", &round)
-
-			.Func<SQFloat (*)(SQFloat)>("tanh", &tanh)
-
-			// Random number generator (MT).
-			.Func("rand" , &mt_rand)
-			.Func("srand", &mt_srand)
-		;
-
-		// Constants.
-		ConstTable()
-			.Const("PI", (SQFloat)3.14159265358979323846)
-		;
-		*/
 	}
 	sq_settop(v, top);
 	
 	mtrand = MT_Rand();
-
-	//srand(time(NULL)); rand();
 }
 
 }
