@@ -1,6 +1,8 @@
+#include "sqal_internal.h"
+
 // Grabbed from sqstd sqstdaux.cpp and slightly modified.
 
-void sqstd_printcallstack(HSQUIRRELVM v) {
+void sqal_printcallstack(HSQUIRRELVM v) {
 	SQPRINTFUNCTION pf = sq_geterrorfunc(v);
 	if (!pf) return;
 
@@ -48,7 +50,7 @@ void sqstd_printcallstack(HSQUIRRELVM v) {
 	}
 }
 
-static SQInteger _sqstd_aux_printerror(HSQUIRRELVM v) {
+static SQInteger _sqal_aux_printerror(HSQUIRRELVM v) {
 	SQPRINTFUNCTION pf = sq_geterrorfunc(v);
 	const SQChar *sErr = NULL;
 
@@ -59,19 +61,19 @@ static SQInteger _sqstd_aux_printerror(HSQUIRRELVM v) {
 	} else {
 		pf(v, _SC("\nAN ERROR HAS OCCURED [unknown]\n"));
 	}
-	sqstd_printcallstack(v);
+	sqal_printcallstack(v);
 
 	return 0;
 }
 
-void _sqstd_compiler_error(HSQUIRRELVM v, const SQChar *sErr, const SQChar *sSource, SQInteger line, SQInteger column) {
+void _sqal_compiler_error(HSQUIRRELVM v, const SQChar *sErr, const SQChar *sSource, SQInteger line, SQInteger column) {
 	SQPRINTFUNCTION pf = sq_geterrorfunc(v); if (!pf) return;
 
 	pf(v, _SC("%s line = (%d) column = (%d) : error %s\n"), sSource, line, column, sErr);
 }
 
-void sqstd_seterrorhandlers(HSQUIRRELVM v) {
-	sq_setcompilererrorhandler(v, _sqstd_compiler_error);
-	sq_newclosure(v, _sqstd_aux_printerror, 0);
+void sqal_seterrorhandlers(HSQUIRRELVM v) {
+	sq_setcompilererrorhandler(v, _sqal_compiler_error);
+	sq_newclosure(v, _sqal_aux_printerror, 0);
 	sq_seterrorhandler(v);
 }
