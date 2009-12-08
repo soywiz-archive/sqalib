@@ -255,30 +255,53 @@ SQUIRREL_API void sqal_math_register(HSQUIRRELVM v) {
 		sqal_register_constant("PI", (SQFloat)3.14159265358979323846);
 
 		//if (0)
-		{ // ::vec
+		{ // ::Vec
 			static const SQChar *class_vec_src = _SC(" \
-				class vec { \n\
+				class ::Vec { \n\
 					x = 0; y = 0; \n\
 					constructor(x, y = null) { \n\
 						if (y == null) { \n\
-							if (!(\"x\" in x)) throw(\"::vec invalid parameters\"); \n\
+							if (!(\"x\" in x)) throw(\"::Vec invalid parameters\"); \n\
 							this.y = x.y; this.x = x.x; \n\
 						} else { \n\
 							this.x = x; this.y = y; \n\
 						} \n\
 					} \n\
 					function _cmp (that)  { return ((this.x == that.x) && (this.y == that.y)) ? 0 : 1; } \n\
-					function _add (that)  { return ::vec(this.x + that.x, this.y + that.y); } \n\
-					function _sub (that)  { return ::vec(this.x - that.x, this.y - that.y); } \n\
-					function _mul (v)     { return ::vec(this.x * v     , this.y * v     ); } \n\
-					function _div (v)     { return ::vec(this.x / v     , this.y / v     ); } \n\
-					function _unm ()      { return ::vec(-this.x, -this.y); } \n\
+					function _add (that)  { return ::Vec(this.x + that.x, this.y + that.y); } \n\
+					function _sub (that)  { return ::Vec(this.x - that.x, this.y - that.y); } \n\
+					function _mul (v)     { return ::Vec(this.x * v     , this.y * v     ); } \n\
+					function _div (v)     { return ::Vec(this.x / v     , this.y / v     ); } \n\
+					function _unm ()      { return ::Vec(-this.x, -this.y); } \n\
 					function len  ()      { return ::sqrt(this.x * this.x + this.y * this.y); } \n\
-					function floor()      { return ::vec(::floor(this.x), ::floor(this.y)); } \n\
-					function abs  ()      { return ::vec(::abs(this.x), ::abs(this.y)); } \n\
-					function normalize()  { local l = this.len(); return ::vec(this.x / l, this.y / l); } \n\
+					function floor()      { return ::Vec(::floor(this.x), ::floor(this.y)); } \n\
+					function abs  ()      { return ::Vec(::abs(this.x), ::abs(this.y)); } \n\
+					function normalize()  { local l = this.len(); return ::Vec(this.x / l, this.y / l); } \n\
 					function _tostring()  { return ::format(\"vec(%d, %d)\", this.x, this.y) } \n\
 					function _cloned()    { } \n\
+				} \n\
+				 \n\
+				class ::Rect { \n\
+					p0 = ::Vec(0, 0); \n\
+					p1 = ::Vec(0, 0); \n\
+					size = ::Vec(0, 0); \n\
+					constructor(p0, p1, x2 = null, y2 = null) { \n\
+						if (x2 != null) { \n\
+							this.p0 = ::Vec(p0, p1); \n\
+							this.p1 = ::Vec(x2, y2); \n\
+						} else { \n\
+							this.p0 = p0; \n\
+							this.p1 = p1; \n\
+						} \n\
+						this.size = (this.p1 - this.p0).abs(); \n\
+					} \n\
+					function _tostring() { return ::format(\"Rect((%s), (%s))\", this.p0._tostring(), this.p1._tostring()); } \n\
+					function inside(p) { \n\
+						return ( \n\
+							(p.x >= this.p0.x) && (p.y >= this.p0.y) && \n\
+							(p.x <  this.p1.x) && (p.y <  this.p1.y) \n\
+						); \n\
+					} \n\
 				} \n\
 			");
 			SQInteger oldtop = sq_gettop(v);
