@@ -14,9 +14,9 @@ int sign(int v) { if (v < 0) return -1; if (v > 0) return +1; return 0; }
 #endif
 void swap(int &l, int &r) { int t; t = r; r = l; l = t; }
 
-#define DSQA_FUNC_FLOAT_P1(NAME) DSQA_FUNC(NAME) { SQFloat f = 0.0; sq_getfloat(v, -1, &f); sq_pushfloat(v, NAME(f)); return 1; }
-#define DSQA_FUNC_FLOAT_P1_INT(NAME) DSQA_FUNC(NAME) { SQFloat f = 0.0; sq_getfloat(v, -1, &f); sq_pushinteger(v, (int)NAME(f)); return 1; }
-#define DSQA_FUNC_FLOAT_P2(NAME) DSQA_FUNC(NAME) { SQFloat l = 0.0, r = 0.0; sq_getfloat(v, -1, &r); sq_getfloat(v, -2, &l); sq_pushfloat(v, NAME(l, r)); return 1; }
+#define DSQA_FUNC_FLOAT_P1(NAME)     DSQA_FUNC(NAME) { SQFloat f = 0.0         ; sq_getfloat(v, -1, &f); sq_pushfloat  (v,      NAME(f)); return 1; }
+#define DSQA_FUNC_FLOAT_P1_INT(NAME) DSQA_FUNC(NAME) { SQFloat f = 0.0         ; sq_getfloat(v, -1, &f); sq_pushinteger(v, (int)NAME(f)); return 1; }
+#define DSQA_FUNC_FLOAT_P2(NAME)     DSQA_FUNC(NAME) { SQFloat l = 0.0, r = 0.0; sq_getfloat(v, -1, &r); sq_getfloat   (v, -2, &l); sq_pushfloat(v, NAME(l, r)); return 1; }
 
 extern "C" {
 
