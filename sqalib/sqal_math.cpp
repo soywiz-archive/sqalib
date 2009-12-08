@@ -49,8 +49,8 @@ DSQA_FUNC(abs) {
 DSQA_FUNC(sign) {
 	SQInteger res;
 	SQObjectPtr &a = stack_get(v, -1);
-	v->ObjCmp(a, 0, res);
-	v->Push(sign(-1));
+	v->ObjCmp(a, (SQFloat)0.0, res);
+	v->Push(sign(res));
 	return 1;
 }
 
@@ -216,11 +216,11 @@ SQUIRREL_API void sqal_math_register(HSQUIRRELVM v) {
 	SQInteger top = sq_gettop(v);
 	{
 		// Misc.
+		sqal_register_simple(abs,   "..");
+		sqal_register_simple(clamp, "....");
+		sqal_register_simple(sign,  "..");
 		sqal_register_simple(min,   "...");
 		sqal_register_simple(max,   "...");
-		sqal_register_simple(abs,   "..");
-		sqal_register_simple(sign,  "..");
-		sqal_register_simple(clamp, "....");
 		sqal_register_simple(interpolate, "....");
 
 		// Rounding.
