@@ -224,32 +224,32 @@ SQUIRREL_API void sqal_math_register(HSQUIRRELVM v) {
 		sqal_register_simple(interpolate, "....");
 
 		// Rounding.
-		sqal_register_simple(floor, ".f");
-		sqal_register_simple(ceil,  ".f");
-		sqal_register_simple(round, ".f");
+		sqal_register_simple(floor, ".n");
+		sqal_register_simple(ceil,  ".n");
+		sqal_register_simple(round, ".n");
 
 		// Arithmetic.
-		sqal_register_simple(sqrt,  ".f");
-		sqal_register_simple(pow,   ".ff");
-		sqal_register_simple(exp,   ".f");
-		sqal_register_simple(log,   ".f");
-		sqal_register_simple(log10, ".f");
+		sqal_register_simple(sqrt,  ".n");
+		sqal_register_simple(pow,   ".nn");
+		sqal_register_simple(exp,   ".n");
+		sqal_register_simple(log,   ".n");
+		sqal_register_simple(log10, ".n");
 
 		// Trigonometric functions.
-		sqal_register_simple(sin,   ".f");
-		sqal_register_simple(cos,   ".f");
-		sqal_register_simple(tan,   ".f");
-		sqal_register_simple(asin,  ".f");
-		sqal_register_simple(acos,  ".f");
-		sqal_register_simple(atan,  ".f");
-		sqal_register_simple(atan2, ".ff");
-		sqal_register_simple(sinh,  ".f");
-		sqal_register_simple(cosh,  ".f");
-		sqal_register_simple(tanh,  ".f");
+		sqal_register_simple(sin,   ".n");
+		sqal_register_simple(cos,   ".n");
+		sqal_register_simple(tan,   ".n");
+		sqal_register_simple(asin,  ".n");
+		sqal_register_simple(acos,  ".n");
+		sqal_register_simple(atan,  ".n");
+		sqal_register_simple(atan2, ".nn");
+		sqal_register_simple(sinh,  ".n");
+		sqal_register_simple(cosh,  ".n");
+		sqal_register_simple(tanh,  ".n");
 
 		// Random number generator (MT).
-		sqal_register_simple(srand, ".i");
-		sqal_register_simple(rand,  ".ii");
+		sqal_register_simple(srand, ".n");
+		sqal_register_simple(rand,  ".nn");
 
 		// Constants.
 		sqal_register_constant("PI", (SQFloat)3.14159265358979323846);
