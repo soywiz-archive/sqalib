@@ -19,13 +19,13 @@ Builder::build(array(
 
 // Sqstdlib.lib
 Builder::build(array(
-	'out' => 'sqstdlib/sqstdlib.lib',
+	'out' => 'squirrel3/sqstdlib/sqstdlib.lib',
 	'in'  => array(
-		'sqstdlib/*.cpp',
+		'squirrel3/sqstdlib/*.cpp',
 	),
 	'include' => array(
 		'squirrel3',
-		'sqstdlib',
+		'squirrel3/sqstdlib',
 	),
 	'opts' => "{$common}",
 ));
@@ -38,7 +38,7 @@ Builder::build(array(
 	),
 	'include' => array(
 		'squirrel3',
-		'sqstdlib',
+		'squirrel3/sqstdlib',
 		'sqalib',
 		'sqrat',
 	),
@@ -51,12 +51,12 @@ Builder::build(array(
 	'in'  => array(
 		'sq.c',
 		'squirrel3/squirrel.lib',
-		'sqstdlib/sqstdlib.lib',
+		'squirrel3/sqstdlib/sqstdlib.lib',
 		'sqalib/sqalib.lib',
 	),
 	'include' => array(
 		'squirrel3',
-		'sqstdlib',
+		'squirrel3/sqstdlib',
 		'sqalib',
 		'sqrat',
 	),
