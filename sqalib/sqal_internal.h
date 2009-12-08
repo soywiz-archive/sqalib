@@ -15,6 +15,8 @@
 
 #include <squirrel.h>
 
+//#include <sqrat.h>
+
 extern "C" {
 
 #ifndef u8
@@ -60,5 +62,5 @@ void _sqal_register(HSQUIRRELVM v, char *name, SQFUNCTION func, char *check_type
 void _sqal_register_constant(HSQUIRRELVM v, char *name, SQFloat vv);
 void _sqal_register_constant(HSQUIRRELVM v, char *name, int vv);
 //#define sqal_register(NAME, NPARAMS, TYPEMASK) _sqal_register(v, "__sqfunc" #NAME, __sqfunc_##NAME, (TYPEMASK), (NPARAMS))
-#define sqal_register_simple(NAME, TYPEMASK) _sqal_register(v, #NAME, __sqfunc_##NAME, (TYPEMASK), SQ_MATCHTYPEMASKSTRING)
-#define sqal_register_constant(NAME, VALUE) _sqal_register_constant(v, NAME, VALUE);
+#define sqal_register_simple(NAME, TYPEMASK) ::_sqal_register(v, #NAME, __sqfunc_##NAME, (TYPEMASK), SQ_MATCHTYPEMASKSTRING)
+#define sqal_register_constant(NAME, VALUE) ::_sqal_register_constant(v, NAME, VALUE);

@@ -2,7 +2,8 @@
 
 require_once(__DIR__ . '/builder.php');
 
-$common = '/DSQUSEDOUBLE=1';
+//$common = '/MD /GF /Ox /EHsc /DSQUSEDOUBLE=1';
+$common = '/MD /GF /Ox /EHsc';
 
 // Squirrel.
 Builder::build(array(
@@ -13,7 +14,7 @@ Builder::build(array(
 	'include' => array(
 		'squirrel',
 	),
-	'opts' => "/MD /GF /Ox {$common}",
+	'opts' => "{$common}",
 ));
 
 // Sqstdlib.lib
@@ -26,7 +27,7 @@ Builder::build(array(
 		'squirrel',
 		'sqstdlib',
 	),
-	'opts' => "/MD /GF /Ox {$common}",
+	'opts' => "{$common}",
 ));
 
 // Sqalib.lib
@@ -37,9 +38,11 @@ Builder::build(array(
 	),
 	'include' => array(
 		'squirrel',
+		'sqstdlib',
 		'sqalib',
+		'sqrat',
 	),
-	'opts' => "/MD /GF /Ox {$common}",
+	'opts' => "{$common}",
 ));
 
 // SQ.exe
@@ -55,6 +58,7 @@ Builder::build(array(
 		'squirrel',
 		'sqstdlib',
 		'sqalib',
+		'sqrat',
 	),
-	'opts' => "/MD /GF /Ox {$common}",
+	'opts' => "{$common}",
 ));
