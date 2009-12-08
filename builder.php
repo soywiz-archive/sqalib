@@ -43,10 +43,10 @@ class Builder {
 		
 		$objs = array();
 		
-		$in_extra = static::expand($info['in_extra']);
+		$in_extra = self::expand($info['in_extra']);
 		
 		//print_r($info['in']);
-		foreach (static::expand($info['in']) as $file) {
+		foreach (self::expand($info['in']) as $file) {
 			$file_ext = pathinfo($file, PATHINFO_EXTENSION);
 
 			$file_deps = array_merge(array($file), $in_extra);
@@ -57,13 +57,13 @@ class Builder {
 					$file_out = preg_replace('@\\.(.*)$@Usi', '.obj', $file);
 					$objs[] = $file_out;
 					
-					if (!static::compare_times($file_out, $file_deps)) {
+					if (!self::compare_times($file_out, $file_deps)) {
 						echo "{$file} -> {$file_out}\n";
 						@unlink($file_out);
 						$cmd = "cl /nologo /c{$includes} {$file} /Fo" . escapeshellarg($file_out) . " {$info['opts']}";
 						//echo "{$cmd}\n";
 						passthru($cmd, $retval);
-						static::update_times($file_out, $file_deps);
+						self::update_times($file_out, $file_deps);
 						if (filesize($file_out) == 0) @unlink($file_out);
 					}
 				break;
@@ -73,7 +73,7 @@ class Builder {
 			}
 		}
 		
-		$in_extra = static::expand($info['in_extra']);
+		$in_extra = self::expand($info['in_extra']);
 		
 		$objs = array_unique($objs);
 
@@ -83,7 +83,7 @@ class Builder {
 		switch ($out_ext) {
 			case 'exe':
 			case 'lib':
-				if (!static::compare_times($out, array_merge($objs, $in_extra))) {
+				if (!self::compare_times($out, array_merge($objs, $in_extra))) {
 					$cmd = sprintf(
 						'%s /nologo %s %s /OUT:%s %s',
 						($out_ext == 'lib') ? 'lib' : 'link',
@@ -94,7 +94,7 @@ class Builder {
 					);
 					//echo "{$cmd}\n";
 					passthru($cmd, $retval);
-					static::update_times($out, array_merge($objs, $in_extra));
+					self::update_times($out, array_merge($objs, $in_extra));
 					if (filesize($out) == 0) @unlink($out);
 				}
 			break;
