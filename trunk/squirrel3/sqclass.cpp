@@ -14,8 +14,11 @@ SQClass::SQClass(SQSharedState *ss,SQClass *base)
 	_typetag = 0;
 	_hook = NULL;
 	_udsize = 0;
+	_locked = false;
+	_constructoridx = -1;
 	_metamethods.resize(MT_LAST); //size it to max size
 	if(_base) {
+		_constructoridx = _base->_constructoridx;
 		_defaultvalues.copy(base->_defaultvalues);
 		_methods.copy(base->_methods);
 		_metamethods.copy(base->_metamethods);
@@ -23,13 +26,13 @@ SQClass::SQClass(SQSharedState *ss,SQClass *base)
 	}
 	_members = base?base->_members->Clone() : SQTable::Create(ss,0);
 	__ObjAddRef(_members);
-	_locked = false;
+	
 	INIT_CHAIN();
 	ADD_TO_CHAIN(&_sharedstate->_gc_chain, this);
 }
 
 void SQClass::Finalize() { 
-	_attributes = _null_;
+	_attributes.Null();
 	_defaultvalues.resize(0);
 	_methods.resize(0);
 	_metamethods.resize(0);
@@ -48,14 +51,15 @@ SQClass::~SQClass()
 bool SQClass::NewSlot(SQSharedState *ss,const SQObjectPtr &key,const SQObjectPtr &val,bool bstatic)
 {
 	SQObjectPtr temp;
-	if(_locked) 
+	bool belongs_to_static_table = type(val) == OT_CLOSURE || type(val) == OT_NATIVECLOSURE || bstatic;
+	if(_locked && !belongs_to_static_table) 
 		return false; //the class already has an instance so cannot be modified
 	if(_members->Get(key,temp) && _isfield(temp)) //overrides the default value
 	{
 		_defaultvalues[_member_idx(temp)].val = val;
 		return true;
 	}
-	if(type(val) == OT_CLOSURE || type(val) == OT_NATIVECLOSURE || bstatic) {
+	if(belongs_to_static_table) {
 		SQInteger mmidx;
 		if((type(val) == OT_CLOSURE || type(val) == OT_NATIVECLOSURE) && 
 			(mmidx = ss->GetMetaMethodIdxByName(key)) != -1) {
@@ -69,6 +73,11 @@ bool SQClass::NewSlot(SQSharedState *ss,const SQObjectPtr &key,const SQObjectPtr
 				__ObjAddRef(_base); //ref for the closure
 			}
 			if(type(temp) == OT_NULL) {
+				bool isconstructor;
+				SQVM::IsEqual(ss->_constructoridx, key, isconstructor);
+				if(isconstructor) {
+					_constructoridx = (SQInteger)_methods.size();
+				}
 				SQClassMember m;
 				m.val = theval;
 				_members->NewSlot(key,SQObjectPtr(_make_method_idx(_methods.size())));
@@ -170,7 +179,7 @@ void SQInstance::Finalize()
 	SQUnsignedInteger nvalues = _class->_defaultvalues.size();
 	__ObjRelease(_class);
 	for(SQUnsignedInteger i = 0; i < nvalues; i++) {
-		_values[i] = _null_;
+		_values[i].Null();
 	}
 }
 
