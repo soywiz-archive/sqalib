@@ -44,6 +44,7 @@ struct SQFuncState
 	SQInteger PopTarget();
 	SQInteger TopTarget();
 	SQInteger GetUpTarget(SQInteger n);
+	void DiscardTarget();
 	bool IsLocal(SQUnsignedInteger stkpos);
 	SQObject CreateString(const SQChar *s,SQInteger len = -1);
 	SQObject CreateTable();
@@ -82,6 +83,7 @@ struct SQFuncState
 private:
 	CompilerErrorFunc _errfunc;
 	void *_errtarget;
+	SQSharedState *_ss;
 };
 
 
